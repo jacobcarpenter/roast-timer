@@ -10,9 +10,8 @@ export function App() {
 
 	useEffect(() => {
 		if (mode === modes.running) {
-			setTicks(50);
+			setTicks(0);
 
-			// TODO: high resolution timer? use system clock?
 			const interval = setInterval(() => {
 				setTicks((ticks) => ticks + 1);
 			}, 1000);
