@@ -1,45 +1,59 @@
-import { useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from 'react';
+import { ThemeProvider } from 'theme-ui';
+import { theme } from './theme';
+import { modes } from './constants';
+import { TimerControls } from './TimerControls';
 
-function App() {
-	const [count, setCount] = useState(0);
+export function App() {
+	const [mode, setMode] = useState(modes.stopped);
+	const [ticks, setTicks] = useState(0);
+
+	useEffect(() => {
+		if (mode === modes.running) {
+			setTicks(50);
+
+			// TODO: high resolution timer? use system clock?
+			const interval = setInterval(() => {
+				setTicks((ticks) => ticks + 1);
+			}, 1000);
+			return () => clearInterval(interval);
+		}
+	}, [mode]);
 
 	return (
-		<div className="App">
-			<header className="App-header">
-				<img src={logo} className="App-logo" alt="logo" />
-				<p>Hello Vite + React!</p>
-				<p>
-					<button type="button" onClick={() => setCount((count) => count + 1)}>
-						count is: {count}
-					</button>
-				</p>
-				<p>
-					Edit <code>App.jsx</code> and save to test HMR updates.
-				</p>
-				<p>
-					<a
-						className="App-link"
-						href="https://reactjs.org"
-						target="_blank"
-						rel="noopener noreferrer"
+		<ThemeProvider theme={theme}>
+			<div className="App">
+				<header
+					sx={{
+						padding: 3,
+						background: 'text', // need better color names?
+						color: 'background', // ditto above
+						fontWeight: 'bold',
+					}}
+				>
+					Roast Timer
+				</header>
+				<main>
+					<TimerControls setMode={setMode} />
+					<div
+						sx={{
+							margin: 3,
+							fontSize: '48px',
+							textAlign: 'center',
+							fontVariantNumeric: 'tabular-nums',
+						}}
 					>
-						Learn React
-					</a>
-					{' | '}
-					<a
-						className="App-link"
-						href="https://vitejs.dev/guide/features.html"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						Vite Docs
-					</a>
-				</p>
-			</header>
-		</div>
+						{formatTime(ticks)}
+					</div>
+				</main>
+			</div>
+		</ThemeProvider>
 	);
 }
 
-export default App;
+function formatTime(ticks) {
+	const minutes = `${Math.trunc(ticks / 60)}`.padStart(2, '0');
+	const seconds = `${ticks % 60}`.padStart(2, '0');
+
+	return `${minutes}:${seconds}`;
+}
