@@ -2,6 +2,7 @@ import { useState, useReducer, useEffect } from 'react';
 import { ThemeProvider } from 'theme-ui';
 import { theme } from './theme';
 import { modes, temperatureDelta } from './constants';
+import { formatTime } from './util';
 import {
 	RoastEventInputs,
 	RoastLog,
@@ -13,6 +14,8 @@ export function App() {
 	const [mode, setMode] = useState(modes.stopped);
 	const [roastLog, dispatch] = useReducer(
 		(state, action) => {
+			// TODO: roll mode in and reject actions when in the wrong mode?
+
 			switch (action.type) {
 				case 'tick':
 					return { ...state, ticks: state.ticks + 1 };
@@ -29,7 +32,24 @@ export function App() {
 					return {
 						...state,
 						temperature: nextTemp,
-						events: [...state.events, { time: state.ticks, temp: nextTemp }],
+						events: [
+							...state.events,
+							{ time: state.ticks, temperature: nextTemp },
+						],
+					};
+				}
+
+				case 'logEvent': {
+					return {
+						...state,
+						events: [
+							...state.events,
+							{
+								time: state.ticks,
+								temperature: state.temperature,
+								eventName: action.eventName,
+							},
+						],
 					};
 				}
 
@@ -88,7 +108,11 @@ export function App() {
 							paddingX: 3,
 						}}
 					>
-						<RoastEventInputs />
+						<RoastEventInputs
+							onLogEvent={(eventName) =>
+								dispatch({ type: 'logEvent', eventName })
+							}
+						/>
 						<TemperatureControls
 							temperature={roastLog.temperature}
 							onIncrease={() => dispatch({ type: 'increaseTemp' })}
@@ -96,7 +120,7 @@ export function App() {
 						/>
 					</div>
 
-					<div>
+					<div sx={{ paddingY: 4, paddingX: 3 }}>
 						<RoastLog events={roastLog.events} />
 					</div>
 				</main>
@@ -109,13 +133,6 @@ function getInitialRoastLogState() {
 	return {
 		ticks: 0,
 		temperature: 4,
-		events: [],
+		events: [{ time: 0, temperature: 4 }],
 	};
-}
-
-function formatTime(ticks) {
-	const minutes = `${Math.trunc(ticks / 60)}`.padStart(2, '0');
-	const seconds = `${ticks % 60}`.padStart(2, '0');
-
-	return `${minutes}:${seconds}`;
 }

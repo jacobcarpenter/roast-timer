@@ -25,6 +25,7 @@ export function TemperatureControls({ temperature, onIncrease, onDecrease }) {
 				sx={{
 					display: 'flex',
 					flexDirection: 'column',
+					gap: 2,
 				}}
 			>
 				<BigButton onClick={onIncrease}>Up</BigButton>
