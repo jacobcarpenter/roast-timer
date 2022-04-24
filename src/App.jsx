@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useReducer, useEffect } from 'react';
 import { ThemeProvider } from 'theme-ui';
 import { theme } from './theme';
-import { modes } from './constants';
+import { modes, temperatureDelta } from './constants';
 import {
 	RoastEventInputs,
 	TemperatureControls,
@@ -10,14 +10,41 @@ import {
 
 export function App() {
 	const [mode, setMode] = useState(modes.stopped);
-	const [ticks, setTicks] = useState(0);
+	const [roastLog, dispatch] = useReducer(
+		(state, action) => {
+			switch (action.type) {
+				case 'tick':
+					return { ...state, ticks: state.ticks + 1 };
+
+				case 'increaseTemp':
+					return {
+						...state,
+						temperature: state.temperature + temperatureDelta,
+					};
+				case 'decreaseTemp':
+					return {
+						...state,
+						temperature: state.temperature - temperatureDelta,
+					};
+
+				// TODO: guard against accidental reset; persistent log?
+				case 'reset':
+					return getInitialRoastLogState();
+
+				default:
+					return state;
+			}
+		},
+		null,
+		getInitialRoastLogState
+	);
 
 	useEffect(() => {
 		if (mode === modes.running) {
-			setTicks(0);
+			dispatch({ type: 'reset' });
 
 			const interval = setInterval(() => {
-				setTicks((ticks) => ticks + 1);
+				dispatch({ type: 'tick' });
 			}, 1000);
 			return () => clearInterval(interval);
 		}
@@ -46,21 +73,34 @@ export function App() {
 							fontVariantNumeric: 'tabular-nums',
 						}}
 					>
-						{formatTime(ticks)}
+						{formatTime(roastLog.ticks)}
 					</div>
 					<div
 						sx={{
 							display: 'flex',
 							justifyContent: 'space-between',
+							paddingX: 3,
 						}}
 					>
 						<RoastEventInputs />
-						<TemperatureControls />
+						<TemperatureControls
+							temperature={roastLog.temperature}
+							onIncrease={() => dispatch({ type: 'increaseTemp' })}
+							onDecrease={() => dispatch({ type: 'decreaseTemp' })}
+						/>
 					</div>
 				</main>
 			</div>
 		</ThemeProvider>
 	);
+}
+
+function getInitialRoastLogState() {
+	return {
+		ticks: 0,
+		temperature: 4,
+		events: {},
+	};
 }
 
 function formatTime(ticks) {
