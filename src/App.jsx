@@ -4,6 +4,7 @@ import { theme } from './theme';
 import { modes, temperatureDelta } from './constants';
 import {
 	RoastEventInputs,
+	RoastLog,
 	TemperatureControls,
 	TimerControls,
 } from './Controls';
@@ -17,15 +18,20 @@ export function App() {
 					return { ...state, ticks: state.ticks + 1 };
 
 				case 'increaseTemp':
+				case 'decreaseTemp': {
+					// TODO: min/max range limits?
+
+					const nextTemp =
+						action.type === 'increaseTemp'
+							? state.temperature + temperatureDelta
+							: state.temperature - temperatureDelta;
+
 					return {
 						...state,
-						temperature: state.temperature + temperatureDelta,
+						temperature: nextTemp,
+						events: [...state.events, { time: state.ticks, temp: nextTemp }],
 					};
-				case 'decreaseTemp':
-					return {
-						...state,
-						temperature: state.temperature - temperatureDelta,
-					};
+				}
 
 				// TODO: guard against accidental reset; persistent log?
 				case 'reset':
@@ -56,7 +62,7 @@ export function App() {
 				<header
 					sx={{
 						padding: 3,
-						background: 'text', // need better color names?
+						background: 'text', // need better color names? -- theme-ui presets
 						color: 'background', // ditto above
 						fontWeight: 'bold',
 					}}
@@ -89,6 +95,10 @@ export function App() {
 							onDecrease={() => dispatch({ type: 'decreaseTemp' })}
 						/>
 					</div>
+
+					<div>
+						<RoastLog events={roastLog.events} />
+					</div>
 				</main>
 			</div>
 		</ThemeProvider>
@@ -99,7 +109,7 @@ function getInitialRoastLogState() {
 	return {
 		ticks: 0,
 		temperature: 4,
-		events: {},
+		events: [],
 	};
 }
 
