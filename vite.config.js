@@ -6,6 +6,17 @@ export default defineConfig({
 	plugins: [
 		react({
 			jsxImportSource: 'theme-ui',
+			babel: {
+				plugins: [
+					[
+						'@babel/plugin-proposal-record-and-tuple',
+						{
+							syntaxType: 'hash',
+							importPolyfill: true,
+						},
+					],
+				],
+			},
 		}),
 	],
 });

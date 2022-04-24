@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 import { ThemeProvider } from 'theme-ui';
 import { theme } from './theme';
 import { modes } from './constants';
-import { TimerControls } from './TimerControls';
+import {
+	RoastEventInputs,
+	TemperatureControls,
+	TimerControls,
+} from './Controls';
 
 export function App() {
 	const [mode, setMode] = useState(modes.stopped);
@@ -43,6 +47,15 @@ export function App() {
 						}}
 					>
 						{formatTime(ticks)}
+					</div>
+					<div
+						sx={{
+							display: 'flex',
+							justifyContent: 'space-between',
+						}}
+					>
+						<RoastEventInputs />
+						<TemperatureControls />
 					</div>
 				</main>
 			</div>

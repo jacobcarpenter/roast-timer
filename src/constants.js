@@ -1,4 +1,4 @@
-export const modes = {
+export const modes = #{
 	stopped: 'stopped',
 	running: 'running',
 };
