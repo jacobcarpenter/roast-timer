@@ -31,14 +31,18 @@ export function App() {
 					return {
 						...state,
 						mode: modes.stopped,
-						events: [
-							...state.events,
-							{
-								time: state.ticks,
-								temperature: state.temperature,
-								eventName: 'finished',
-							},
-						],
+
+						// only append an event if we're running
+						...(state.mode === modes.running && {
+							events: [
+								...state.events,
+								{
+									time: state.ticks,
+									temperature: state.temperature,
+									eventName: 'finished',
+								},
+							],
+						}),
 					};
 
 				// TODO: guard against accidental reset; persistent log?
