@@ -1,24 +1,22 @@
 import { Flex } from 'theme-ui';
-import { modes } from '../constants';
 import { BigButton } from '../components';
 
-export function TimerControls({ setMode }) {
+export function TimerControls({ showReset, onStart, onStop, onReset }) {
 	return (
 		<Flex sx={{ gap: 2 }}>
-			<BigButton
-				variant="black"
-				sx={{ flex: '1 1 auto' }}
-				onClick={() => setMode(modes.running)}
-			>
+			<BigButton variant="black" sx={{ flex: '1 1 0' }} onClick={onStart}>
 				Start
 			</BigButton>
-			<BigButton
-				variant="black"
-				sx={{ flex: '1 1 auto' }}
-				onClick={() => setMode(modes.stopped)}
-			>
-				Stop
-			</BigButton>
+
+			{!showReset ? (
+				<BigButton variant="black" sx={{ flex: '1 1 0' }} onClick={onStop}>
+					Stop
+				</BigButton>
+			) : (
+				<BigButton variant="primary" sx={{ flex: '1 1 0' }} onClick={onReset}>
+					Reset
+				</BigButton>
+			)}
 		</Flex>
 	);
 }

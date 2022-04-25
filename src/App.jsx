@@ -1,4 +1,4 @@
-import { useState, useReducer, useEffect } from 'react';
+import { useReducer, useEffect } from 'react';
 import { ThemeProvider, Box, Flex, Heading } from 'theme-ui';
 import { theme } from './theme';
 import { modes, temperatureDelta } from './constants';
@@ -12,13 +12,39 @@ import {
 } from './Controls';
 
 export function App() {
-	const [mode, setMode] = useState(modes.stopped);
 	const [roastLog, dispatch] = useReducer(
 		(state, action) => {
-			// TODO: roll mode in and reject actions when in the wrong mode?
 			// TODO: factor function out of component?
 
 			switch (action.type) {
+				case 'start':
+					return {
+						...state,
+						mode: modes.running,
+						events: [
+							...state.events,
+							{ time: state.ticks, temperature: state.temperature },
+						],
+					};
+
+				case 'stop':
+					return {
+						...state,
+						mode: modes.stopped,
+						events: [
+							...state.events,
+							{
+								time: state.ticks,
+								temperature: state.temperature,
+								eventName: 'finished',
+							},
+						],
+					};
+
+				// TODO: guard against accidental reset; persistent log?
+				case 'reset':
+					return getInitialRoastLogState();
+
 				case 'tick':
 					return { ...state, ticks: state.ticks + 1 };
 
@@ -34,10 +60,14 @@ export function App() {
 					return {
 						...state,
 						temperature: nextTemp,
-						events: [
-							...state.events,
-							{ time: state.ticks, temperature: nextTemp },
-						],
+
+						// only append a temperature event if we're running
+						...(state.mode === modes.running && {
+							events: [
+								...state.events,
+								{ time: state.ticks, temperature: nextTemp },
+							],
+						}),
 					};
 				}
 
@@ -55,10 +85,6 @@ export function App() {
 					};
 				}
 
-				// TODO: guard against accidental reset; persistent log?
-				case 'reset':
-					return getInitialRoastLogState();
-
 				default:
 					return state;
 			}
@@ -67,10 +93,10 @@ export function App() {
 		getInitialRoastLogState
 	);
 
+	const { mode } = roastLog;
+
 	useEffect(() => {
 		if (mode === modes.running) {
-			dispatch({ type: 'reset' });
-
 			const interval = setInterval(() => {
 				dispatch({ type: 'tick' });
 			}, 1000);
@@ -80,12 +106,17 @@ export function App() {
 
 	return (
 		<ThemeProvider theme={theme}>
-			<div className="App">
+			<Box>
 				<Heading as="h1" padding={3}>
 					Roast Timer
 				</Heading>
 				<Stack as="main" spacing={3} sx={{ paddingX: 3 }}>
-					<TimerControls setMode={setMode} />
+					<TimerControls
+						onStart={() => dispatch({ type: 'start' })}
+						onStop={() => dispatch({ type: 'stop' })}
+						onReset={() => dispatch({ type: 'reset' })}
+						showReset={mode === modes.stopped && roastLog.events.length}
+					/>
 
 					<Box
 						sx={{
@@ -114,15 +145,16 @@ export function App() {
 						<RoastLog events={roastLog.events} />
 					</Box>
 				</Stack>
-			</div>
+			</Box>
 		</ThemeProvider>
 	);
 }
 
 function getInitialRoastLogState() {
 	return {
+		mode: modes.stopped,
 		ticks: 0,
 		temperature: 4,
-		events: [{ time: 0, temperature: 4 }],
+		events: [],
 	};
 }
