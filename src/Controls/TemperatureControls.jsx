@@ -1,3 +1,4 @@
+import { Flex } from 'theme-ui';
 import { BigButton } from '../components';
 
 export function TemperatureControls({ temperature, onIncrease, onDecrease }) {
@@ -5,9 +6,8 @@ export function TemperatureControls({ temperature, onIncrease, onDecrease }) {
 	const fractionalPart = `${(temperature * 100) % 100}`.padEnd(2, '0');
 
 	return (
-		<div
+		<Flex
 			sx={{
-				display: 'flex',
 				alignItems: 'center',
 				gap: 3,
 			}}
@@ -21,16 +21,19 @@ export function TemperatureControls({ temperature, onIncrease, onDecrease }) {
 				<span>{wholePart}</span>{' '}
 				<span sx={{ fontSize: 3 }}>{fractionalPart}</span>
 			</div>
-			<div
+			<Flex
 				sx={{
-					display: 'flex',
 					flexDirection: 'column',
 					gap: 2,
 				}}
 			>
-				<BigButton onClick={onIncrease}>Up</BigButton>
-				<BigButton onClick={onDecrease}>Down</BigButton>
-			</div>
-		</div>
+				<BigButton variant="primary" onClick={onIncrease}>
+					Up
+				</BigButton>
+				<BigButton variant="primary" onClick={onDecrease}>
+					Down
+				</BigButton>
+			</Flex>
+		</Flex>
 	);
 }

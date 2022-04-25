@@ -9,12 +9,22 @@ export function RoastEventInputs({ onLogEvent }) {
 				gap: 2,
 			}}
 		>
-			<BigButton onClick={() => onLogEvent('yellow')}>Yellow</BigButton>
-			<BigButton onClick={() => onLogEvent('brown')}>Brown</BigButton>
-			<BigButton onClick={() => onLogEvent('initial first crack')}>
+			<BigButton variant="secondary" onClick={() => onLogEvent('yellow')}>
+				Yellow
+			</BigButton>
+			<BigButton variant="secondary" onClick={() => onLogEvent('brown')}>
+				Brown
+			</BigButton>
+			<BigButton
+				variant="secondary"
+				onClick={() => onLogEvent('initial first crack')}
+			>
 				IFC
 			</BigButton>
-			<BigButton onClick={() => onLogEvent('rolling first crack')}>
+			<BigButton
+				variant="secondary"
+				onClick={() => onLogEvent('rolling first crack')}
+			>
 				RFC
 			</BigButton>
 		</div>

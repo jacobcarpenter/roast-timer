@@ -1,8 +1,9 @@
 import { useState, useReducer, useEffect } from 'react';
-import { ThemeProvider } from 'theme-ui';
+import { ThemeProvider, Box, Flex, Heading } from 'theme-ui';
 import { theme } from './theme';
 import { modes, temperatureDelta } from './constants';
 import { formatTime } from './util';
+import { Stack } from './components';
 import {
 	RoastEventInputs,
 	RoastLog,
@@ -15,6 +16,7 @@ export function App() {
 	const [roastLog, dispatch] = useReducer(
 		(state, action) => {
 			// TODO: roll mode in and reject actions when in the wrong mode?
+			// TODO: factor function out of component?
 
 			switch (action.type) {
 				case 'tick':
@@ -79,34 +81,23 @@ export function App() {
 	return (
 		<ThemeProvider theme={theme}>
 			<div className="App">
-				<header
-					sx={{
-						padding: 3,
-						background: 'text', // need better color names? -- theme-ui presets
-						color: 'background', // ditto above
-						fontWeight: 'bold',
-					}}
-				>
+				<Heading as="h1" padding={3}>
 					Roast Timer
-				</header>
-				<main sx={{ paddingX: 3, paddingTop: 3 }}>
+				</Heading>
+				<Stack as="main" spacing={3} sx={{ paddingX: 3 }}>
 					<TimerControls setMode={setMode} />
-					<div
+
+					<Box
 						sx={{
-							margin: 3,
 							fontSize: '48px',
 							textAlign: 'center',
 							fontVariantNumeric: 'tabular-nums',
 						}}
 					>
 						{formatTime(roastLog.ticks)}
-					</div>
-					<div
-						sx={{
-							display: 'flex',
-							justifyContent: 'space-between',
-						}}
-					>
+					</Box>
+
+					<Flex sx={{ justifyContent: 'space-between' }}>
 						<RoastEventInputs
 							onLogEvent={(eventName) =>
 								dispatch({ type: 'logEvent', eventName })
@@ -117,12 +108,12 @@ export function App() {
 							onIncrease={() => dispatch({ type: 'increaseTemp' })}
 							onDecrease={() => dispatch({ type: 'decreaseTemp' })}
 						/>
-					</div>
+					</Flex>
 
-					<div sx={{ paddingY: 4 }}>
+					<Box>
 						<RoastLog events={roastLog.events} />
-					</div>
-				</main>
+					</Box>
+				</Stack>
 			</div>
 		</ThemeProvider>
 	);

@@ -5,8 +5,6 @@ export function BigButton({ sx, ...props }) {
 		<Button
 			sx={{
 				height: '50px',
-				border: 'solid 1px #ccc',
-				color: 'text',
 				...sx,
 			}}
 			{...props}

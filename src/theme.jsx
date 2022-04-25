@@ -1,20 +1,25 @@
+import { funk } from '@theme-ui/presets';
+
 // @ts-check
 
-// TODO: checkout other "presets" from theme-ui
 /** @type { import('theme-ui').Theme } */
 export const theme = {
-	fonts: {
-		// TODO: Roboto? co-pilot suggestion...
-		primary: '"Roboto", sans-serif',
-		monospace: '"Roboto Mono", monospace',
-	},
-	colors: {
-		text: '#000',
-		background: '#fff',
-	},
-	styles: {
-		root: {
-			fontFamily: 'primary',
+	...funk,
+	buttons: {
+		primary: {
+			backgroundColor: 'primary',
+			color: 'background',
+			fontWeight: 'bold',
+		},
+		secondary: {
+			backgroundColor: 'secondary',
+			color: 'background',
+			fontWeight: 'bold',
+		},
+		black: {
+			backgroundColor: 'text',
+			color: 'background',
+			fontWeight: 'bold',
 		},
 	},
 };
