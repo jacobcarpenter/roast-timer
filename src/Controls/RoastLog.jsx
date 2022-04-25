@@ -18,7 +18,7 @@ export function RoastLog({ events }) {
 		<>
 			{condensedEvents.map((e) => (
 				<div key={`${e.time}|${e.eventName}`}>
-					{`${[formatTime(e.time), e.temperature, e.eventName]
+					{`${[formatTime(e.time), e.eventName ?? e.temperature]
 						.filter((x) => x)
 						.join(' — ')}`}
 				</div>

@@ -1,5 +1,5 @@
 import { useReducer, useEffect } from 'react';
-import { ThemeProvider, Box, Flex, Heading } from 'theme-ui';
+import { ThemeProvider, Box, Flex, Heading, Text } from 'theme-ui';
 import { theme } from './theme';
 import { modes, temperatureDelta } from './constants';
 import { formatTime } from './util';
@@ -118,14 +118,15 @@ export function App() {
 						showReset={mode === modes.stopped && roastLog.events.length}
 					/>
 
-					<Box
-						sx={{
-							fontSize: '48px',
-							textAlign: 'center',
-							fontVariantNumeric: 'tabular-nums',
-						}}
-					>
-						{formatTime(roastLog.ticks)}
+					<Box sx={{ textAlign: 'center' }}>
+						<Text
+							sx={{
+								fontSize: 6,
+								fontVariantNumeric: 'tabular-nums',
+							}}
+						>
+							{formatTime(roastLog.ticks)}
+						</Text>
 					</Box>
 
 					<Flex sx={{ justifyContent: 'space-between' }}>
