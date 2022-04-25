@@ -6,8 +6,6 @@ export function TimerControls({ setMode }) {
 		<div
 			sx={{
 				display: 'flex',
-				paddingX: 3,
-				paddingTop: 3,
 				gap: 2,
 			}}
 		>

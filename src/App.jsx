@@ -89,7 +89,7 @@ export function App() {
 				>
 					Roast Timer
 				</header>
-				<main>
+				<main sx={{ paddingX: 3, paddingTop: 3 }}>
 					<TimerControls setMode={setMode} />
 					<div
 						sx={{
@@ -105,7 +105,6 @@ export function App() {
 						sx={{
 							display: 'flex',
 							justifyContent: 'space-between',
-							paddingX: 3,
 						}}
 					>
 						<RoastEventInputs
@@ -120,7 +119,7 @@ export function App() {
 						/>
 					</div>
 
-					<div sx={{ paddingY: 4, paddingX: 3 }}>
+					<div sx={{ paddingY: 4 }}>
 						<RoastLog events={roastLog.events} />
 					</div>
 				</main>
