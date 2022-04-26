@@ -13,90 +13,7 @@ import {
 
 export function App() {
 	const [roastLog, dispatch] = useReducer(
-		(state, action) => {
-			// TODO: factor function out of component?
-
-			switch (action.type) {
-				case 'start':
-					return {
-						...state,
-						mode: modes.running,
-
-						// only append an event if we're not running
-						...(state.mode === modes.stopped && {
-							events: [
-								...state.events,
-								{ time: state.ticks, temperature: state.temperature },
-							],
-						}),
-					};
-
-				case 'stop':
-					return {
-						...state,
-						mode: modes.stopped,
-
-						// only append an event if we're running
-						...(state.mode === modes.running && {
-							events: [
-								...state.events,
-								{
-									time: state.ticks,
-									temperature: state.temperature,
-									eventName: 'finished',
-								},
-							],
-						}),
-					};
-
-				// TODO: guard against accidental reset; persistent log?
-				case 'reset':
-					return getInitialRoastLogState();
-
-				case 'tick':
-					return { ...state, ticks: state.ticks + 1 };
-
-				case 'increaseTemp':
-				case 'decreaseTemp': {
-					// TODO: min/max range limits?
-
-					const nextTemp =
-						action.type === 'increaseTemp'
-							? state.temperature + temperatureDelta
-							: state.temperature - temperatureDelta;
-
-					return {
-						...state,
-						temperature: nextTemp,
-
-						// only append a temperature event if we're running
-						...(state.mode === modes.running && {
-							events: [
-								...state.events,
-								{ time: state.ticks, temperature: nextTemp },
-							],
-						}),
-					};
-				}
-
-				case 'logEvent': {
-					return {
-						...state,
-						events: [
-							...state.events,
-							{
-								time: state.ticks,
-								temperature: state.temperature,
-								eventName: action.eventName,
-							},
-						],
-					};
-				}
-
-				default:
-					return state;
-			}
-		},
+		appReducer,
 		null,
 		getInitialRoastLogState
 	);
@@ -157,6 +74,93 @@ export function App() {
 			</Box>
 		</ThemeProvider>
 	);
+}
+
+function appReducer(state, action) {
+	switch (action.type) {
+		case 'start':
+			return {
+				...state,
+				mode: modes.running,
+
+				// only append an event if we're not running
+				...(state.mode === modes.stopped && {
+					events: [
+						...state.events,
+						{ time: state.ticks, temperature: state.temperature },
+					],
+				}),
+			};
+
+		case 'stop':
+			return {
+				...state,
+				mode: modes.stopped,
+
+				// only append an event if we're running
+				...(state.mode === modes.running && {
+					events: [
+						...state.events,
+						{
+							time: state.ticks,
+							temperature: state.temperature,
+							eventName: 'finished',
+						},
+					],
+				}),
+			};
+
+		// TODO: guard against accidental reset; persistent log?
+		case 'reset':
+			return getInitialRoastLogState();
+
+		case 'tick':
+			return { ...state, ticks: state.ticks + 1 };
+
+		case 'increaseTemp':
+		case 'decreaseTemp': {
+			// TODO: min/max range limits?
+
+			const nextTemp =
+				action.type === 'increaseTemp'
+					? state.temperature + temperatureDelta
+					: state.temperature - temperatureDelta;
+
+			return {
+				...state,
+				temperature: nextTemp,
+
+				// only append a temperature event if we're running
+				...(state.mode === modes.running && {
+					events: [
+						...state.events,
+						{ time: state.ticks, temperature: nextTemp },
+					],
+				}),
+			};
+		}
+
+		case 'logEvent': {
+			if (state.mode !== modes.running) {
+				return state;
+			}
+
+			return {
+				...state,
+				events: [
+					...state.events,
+					{
+						time: state.ticks,
+						temperature: state.temperature,
+						eventName: action.eventName,
+					},
+				],
+			};
+		}
+
+		default:
+			return state;
+	}
 }
 
 function getInitialRoastLogState() {
