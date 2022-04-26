@@ -1,4 +1,4 @@
-import { Flex } from 'theme-ui';
+import { Box, Flex, Text } from 'theme-ui';
 import { BigButton } from '../components';
 
 export function TemperatureControls({ temperature, onIncrease, onDecrease }) {
@@ -12,15 +12,10 @@ export function TemperatureControls({ temperature, onIncrease, onDecrease }) {
 				gap: 3,
 			}}
 		>
-			<div
-				sx={{
-					fontSize: 4,
-					fontVariantNumeric: 'tabular-nums',
-				}}
-			>
-				<span>{wholePart}</span>{' '}
-				<span sx={{ fontSize: 3 }}>{fractionalPart}</span>
-			</div>
+			<Box sx={{ fontVariantNumeric: 'tabular-nums' }}>
+				<Text sx={{ fontSize: 5 }}>{wholePart}</Text>
+				<Text sx={{ fontSize: 4 }}>&nbsp;{fractionalPart}</Text>
+			</Box>
 			<Flex
 				sx={{
 					flexDirection: 'column',
