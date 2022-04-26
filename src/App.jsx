@@ -21,10 +21,14 @@ export function App() {
 					return {
 						...state,
 						mode: modes.running,
-						events: [
-							...state.events,
-							{ time: state.ticks, temperature: state.temperature },
-						],
+
+						// only append an event if we're not running
+						...(state.mode === modes.stopped && {
+							events: [
+								...state.events,
+								{ time: state.ticks, temperature: state.temperature },
+							],
+						}),
 					};
 
 				case 'stop':
