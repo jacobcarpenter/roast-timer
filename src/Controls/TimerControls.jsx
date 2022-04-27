@@ -13,7 +13,7 @@ export function TimerControls({ showReset, onStart, onStop, onReset }) {
 					Stop
 				</BigButton>
 			) : (
-				<BigButton variant="primary" sx={{ flex: '1 1 0' }} onClick={onReset}>
+				<BigButton variant="secondary" sx={{ flex: '1 1 0' }} onClick={onReset}>
 					Reset
 				</BigButton>
 			)}
