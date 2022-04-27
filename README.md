@@ -1,6 +1,6 @@
 # Coffee roasting timer
 
-<p align="center">
+<p style="text-align: center">
 <a href="https://jacobcarpenter.github.io/roast-timer/">
   <img src=".github/assets/sample-image.png?raw=true" width="180">
 </a>
@@ -20,7 +20,7 @@ It's meant to be used on a mobile device—namely, _my_ phone 😅—and isn't r
 
 This project is also a sandbox for experimenting with various technologies.
 
-[Vite.js](https://vitejs.dev/) + React, using Vite's React template. So far, my experience with Vite has been _very_ enjoyable. Five stars. ⭐️⭐️⭐️⭐️⭐️
+[Vite.js](https://vitejs.dev/) + React, using Vite's React template. So far, my experience with Vite has been _very_ enjoyable. Five stars. <span style="white-space: nowrap">⭐️⭐️⭐️⭐️⭐️</span>
 
 [Theme-ui](https://theme-ui.com/) for styling (css-in-js). Great DX with the main library. I don't think the theme presets are totally awesome yet.
 
