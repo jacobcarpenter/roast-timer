@@ -14,7 +14,7 @@ import {
 export function App() {
 	const [roastLog, dispatch] = useReducer(
 		appReducer,
-		null,
+		{ temperature: 4 },
 		getInitialRoastLogState
 	);
 
@@ -112,7 +112,7 @@ function appReducer(state, action) {
 
 		// TODO: guard against accidental reset; persistent log?
 		case 'reset':
-			return getInitialRoastLogState();
+			return getInitialRoastLogState({ temperature: state.temperature });
 
 		case 'tick':
 			return { ...state, ticks: state.ticks + 1 };
@@ -163,11 +163,11 @@ function appReducer(state, action) {
 	}
 }
 
-function getInitialRoastLogState() {
+function getInitialRoastLogState({ temperature }) {
 	return {
 		mode: modes.stopped,
 		ticks: 0,
-		temperature: 4,
+		temperature,
 		events: [],
 	};
 }
