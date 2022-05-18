@@ -1,5 +1,5 @@
 import { useReducer, useEffect } from 'react';
-import { ThemeProvider, Box, Flex, Heading, Text } from 'theme-ui';
+import { ThemeProvider, Box, Container, Flex, Heading, Text } from 'theme-ui';
 import { theme } from './theme';
 import { modes, temperatureDelta } from './constants';
 import { formatTime } from './util';
@@ -31,7 +31,7 @@ export function App() {
 
 	return (
 		<ThemeProvider theme={theme}>
-			<Box>
+			<Container sx={{ maxWidth: '800px' }}>
 				<Heading as="h1" padding={3}>
 					Roast Timer
 				</Heading>
@@ -71,7 +71,7 @@ export function App() {
 						<RoastLog events={roastLog.events} />
 					</Box>
 				</Stack>
-			</Box>
+			</Container>
 		</ThemeProvider>
 	);
 }
